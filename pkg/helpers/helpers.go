@@ -37,7 +37,7 @@ func Empty(val interface{}) bool {
 
 // MicrosecondStr 将time.Duration 类型 (nano seconds 为单位)
 // 输出到小数点后 3 位的 ms (microsecond 毫秒，千分之一)
-func MicrosecondStr(elapsed time.Duration) string {
+func MicrosecondsStr(elapsed time.Duration) string {
 	return fmt.Sprintf("%.3fms", float64(elapsed.Nanoseconds()))
 }
 

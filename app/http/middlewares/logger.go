@@ -3,12 +3,13 @@ package middlewares
 
 import (
 	"bytes"
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/cast"
-	"go.uber.org/zap"
 	"gohub/pkg/helpers"
 	"gohub/pkg/logger"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/cast"
+	"go.uber.org/zap"
 )
 
 type responseBodyWriter struct {
@@ -35,7 +36,7 @@ func Logger() gin.HandlerFunc {
 
 		// 开始记录日志的逻辑
 		cost := time.Since(start)
-		responseStatus := c.Writer.Status()
+		responStatus := c.Writer.Status()
 
 		logFields := []zap.Field{
 			zap.Int("status", c.Writer.Status()),
@@ -44,25 +45,25 @@ func Logger() gin.HandlerFunc {
 			zap.String("ip", c.ClientIP()),
 			zap.String("user-agent", c.Request.UserAgent()),
 			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
-			zap.String("time", helpers.MicrosecondStr(cost)),
+			zap.String("time", helpers.MicrosecondsStr(cost)),
 		}
 		if c.Request.Method == "POST" || c.Request.Method == "PUT" || c.Request.Method == "DELETE" {
 			// 请求的内容
-			requestBody, _ := c.GetRawData()
-			logFields = append(logFields, zap.String("Request body", string(requestBody)))
+			reqeustBody, _ := c.GetRawData()
+			logFields = append(logFields, zap.String("Request Body", string(reqeustBody)))
 
 			// 响应的内容
 			logFields = append(logFields, zap.String("Response Body", w.body.String()))
 		}
 
-		if responseStatus > 400 || responseStatus <= 499 {
-			// 除了 StatusBadResponse 以外，warning 提示一下，常见的有403 404， 开发时要注意
-			logger.Warn("HTTP Waring"+cast.ToString(responseStatus), logFields...)
-		} else if responseStatus >= 500 && responseStatus <= 599 {
-			// 除了内部错误，记录error
-			logger.Error("HTTP error"+cast.ToString(responseStatus), logFields...)
+		if responStatus > 400 && responStatus <= 499 {
+			// 除了 StatusBadRequest 以外，warning 提示一下，常见的有 403 404，开发时都要注意
+			logger.Warn("HTTP Warning "+cast.ToString(responStatus), logFields...)
+		} else if responStatus >= 500 && responStatus <= 599 {
+			// 除了内部错误，记录 error
+			logger.Error("HTTP Error "+cast.ToString(responStatus), logFields...)
 		} else {
-			logger.Debug("HTTP Access", logFields...)
+			logger.Debug("HTTP Access Log", logFields...)
 		}
 	}
 }
