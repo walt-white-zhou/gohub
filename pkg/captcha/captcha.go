@@ -1,11 +1,13 @@
+// Package captcha 处理图片验证码逻辑
 package captcha
 
 import (
-	"github.com/mojocn/base64Captcha"
 	"gohub/pkg/app"
 	"gohub/pkg/config"
 	"gohub/pkg/redis"
 	"sync"
+
+	"github.com/mojocn/base64Captcha"
 )
 
 type Captcha struct {
@@ -32,8 +34,8 @@ func NewCaptcha() *Captcha {
 
 		// 配置 base64Captcha 驱动信息
 		driver := base64Captcha.NewDriverDigit(
-			config.GetInt("captcha.height"),      // 高
-			config.GetInt("captcha,widht"),       // 宽
+			config.GetInt("captcha.height"),      // 宽
+			config.GetInt("captcha.width"),       // 高
 			config.GetInt("captcha.length"),      // 长度
 			config.GetFloat64("captcha.maxskew"), // 数字的最大倾斜角度
 			config.GetInt("captcha.dotcount"),    // 图片背景里的混淆点数量

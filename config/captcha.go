@@ -6,10 +6,10 @@ func init() {
 	config.Add("captcha", func() map[string]interface{} {
 		return map[string]interface{}{
 
-			// 图片验证码长度
+			// 验证码图片长度
 			"height": 80,
 
-			// 图片验证码宽度
+			// 验证码图片宽度
 			"width": 240,
 
 			// 验证码的长度
@@ -27,7 +27,7 @@ func init() {
 			// debug 模式下的过期时间，方便本地开发调试
 			"debug_expire_time": 10080,
 
-			// # production 环境，使用此 key 可跳过验证，方便测试
+			// 非 production 环境，使用此 key 可跳过验证，方便测试
 			"testing_key": "captcha_skip_test",
 		}
 	})

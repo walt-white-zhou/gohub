@@ -14,8 +14,9 @@ type RedisStore struct {
 	KeyPrefix   string
 }
 
-// Set 实现 base64Captcha.Store interface 的Set方法
+// Set 实现 base64Captcha.Store interface 的 Set 方法
 func (s *RedisStore) Set(key string, value string) error {
+
 	ExpireTime := time.Minute * time.Duration(config.GetInt64("captcha.expire_time"))
 	// 方便本地开发调试
 	if app.IsLocal() {
@@ -28,7 +29,7 @@ func (s *RedisStore) Set(key string, value string) error {
 	return nil
 }
 
-// Get 实现 base64Captcha.store interface 的 Get 方法
+// Get 实现 base64Captcha.Store interface 的 Get 方法
 func (s *RedisStore) Get(key string, clear bool) (value string) {
 	key = s.KeyPrefix + key
 	val := s.RedisClient.Get(key)
@@ -38,7 +39,7 @@ func (s *RedisStore) Get(key string, clear bool) (value string) {
 	return val
 }
 
-// Verify 实现 base64Captcha.Store interface 的verify方法
+// Verify 实现 base64Captcha.Store interface 的 Verify 方法
 func (s *RedisStore) Verify(key, answer string, clear bool) bool {
 	v := s.Get(s.KeyPrefix+key, clear)
 	return v == answer

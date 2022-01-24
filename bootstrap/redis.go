@@ -6,7 +6,7 @@ import (
 	"gohub/pkg/redis"
 )
 
-// SetupRedis 初始化连接
+// SetupRedis 初始化 Redis
 func SetupRedis() {
 
 	// 建立 Redis 连接

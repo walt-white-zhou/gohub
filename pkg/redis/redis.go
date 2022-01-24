@@ -3,10 +3,11 @@ package redis
 
 import (
 	"context"
-	redis "github.com/go-redis/redis/v8"
 	"gohub/pkg/logger"
 	"sync"
 	"time"
+
+	redis "github.com/go-redis/redis/v8"
 )
 
 // RedisClient Redis 服务
@@ -18,17 +19,17 @@ type RedisClient struct {
 // once 确保全局的 Redis 对象只实例一次
 var once sync.Once
 
-// Redis 全局 Redis，使用db 1
+// Redis 全局 Redis，使用 db 1
 var Redis *RedisClient
 
-// ConnectRedis 连接redis数据库， 设置全局的redis对象
+// ConnectRedis 连接 redis 数据库，设置全局的 Redis 对象
 func ConnectRedis(address string, username string, password string, db int) {
 	once.Do(func() {
 		Redis = NewClient(address, username, password, db)
 	})
 }
 
-// NewClient 创建一个新的redis连接
+// NewClient 创建一个新的 redis 连接
 func NewClient(address string, password string, username string, db int) *RedisClient {
 
 	// 初始化自定的 RedisClient 实例
@@ -36,7 +37,7 @@ func NewClient(address string, password string, username string, db int) *RedisC
 	// 使用默认的 context
 	rds.Context = context.Background()
 
-	// 使用redis库里的NewClient初始化连接
+	// 使用 redis 库里的 NewClient 初始化连接
 	rds.Client = redis.NewClient(&redis.Options{
 		Addr:     address,
 		Username: username,
@@ -47,6 +48,7 @@ func NewClient(address string, password string, username string, db int) *RedisC
 	// 测试一下连接
 	err := rds.Ping()
 	logger.LogIf(err)
+
 	return rds
 }
 
@@ -56,7 +58,7 @@ func (rds RedisClient) Ping() error {
 	return err
 }
 
-// Set 存储 key 对应的 value，并且设置 expiration 过期时间
+// Set 存储 key 对应的 value，且设置 expiration 过期时间
 func (rds RedisClient) Set(key string, value interface{}, expiration time.Duration) bool {
 	if err := rds.Client.Set(rds.Context, key, value, expiration).Err(); err != nil {
 		logger.ErrorString("Redis", "Set", err.Error())
@@ -107,8 +109,8 @@ func (rds RedisClient) FlushDB(keys ...string) bool {
 	return true
 }
 
-// Increment 当参数只有一个时，为key，其值增加1.
-// 当参数有 2 个时，第一个参数为 key, 第二个参数为要增加的值 int64 类型。
+// Increment 当参数只有 1 个时，为 key，其值增加 1。
+// 当参数有 2 个时，第一个参数为 key ，第二个参数为要增加的值 int64 类型。
 func (rds RedisClient) Increment(parameters ...interface{}) bool {
 	switch len(parameters) {
 	case 1:
@@ -126,25 +128,26 @@ func (rds RedisClient) Increment(parameters ...interface{}) bool {
 		}
 	default:
 		logger.ErrorString("Redis", "Increment", "参数过多")
+		return false
 	}
 	return true
 }
 
-// Decrement 当参数只有一个时, 为key，其值减1.
-// 当参数有2个时，第一个参数为key，第二个参数为要减去的值 int64 类型
-func (rds RedisClient) Decrement(paramters ...interface{}) bool {
-	switch len(paramters) {
+// Decrement 当参数只有 1 个时，为 key，其值减去 1。
+// 当参数有 2 个时，第一个参数为 key ，第二个参数为要减去的值 int64 类型。
+func (rds RedisClient) Decrement(parameters ...interface{}) bool {
+	switch len(parameters) {
 	case 1:
-		key := paramters[0].(string)
+		key := parameters[0].(string)
 		if err := rds.Client.Decr(rds.Context, key).Err(); err != nil {
 			logger.ErrorString("Redis", "Decrement", err.Error())
 			return false
 		}
 	case 2:
-		key := paramters[0].(string)
-		value := paramters[0].(int64)
-		if err := rds.Client.DecrBy(rds.Context, key, value); err != nil {
-			logger.ErrorString("Redis", "Decrement", err.String())
+		key := parameters[0].(string)
+		value := parameters[0].(int64)
+		if err := rds.Client.DecrBy(rds.Context, key, value).Err(); err != nil {
+			logger.ErrorString("Redis", "Decrement", err.Error())
 			return false
 		}
 	default:
