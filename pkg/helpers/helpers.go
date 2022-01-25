@@ -42,8 +42,8 @@ func MicrosecondsStr(elapsed time.Duration) string {
 }
 
 // RandNumber 生成长度为 length 的随机字符串
-func RandNumber(length int) string {
-	table := []byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
+func RandomNumber(length int) string {
+	table := [...]byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
 	b := make([]byte, length)
 	n, err := io.ReadAtLeast(rand.Reader, b, length)
 	if n != length {

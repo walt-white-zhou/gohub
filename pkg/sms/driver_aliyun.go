@@ -2,16 +2,18 @@ package sms
 
 import (
 	"encoding/json"
-	aliyunsmsClient "github.com/KenmyZhang/aliyun-communicate"
 	"gohub/pkg/logger"
+
+	aliyunsmsclient "github.com/KenmyZhang/aliyun-communicate"
 )
 
 // Aliyun 实现 sms.Driver interface
 type Aliyun struct{}
 
-// Send 实现 sms.Driver interface 的send方法
+// Send 实现 sms.Driver interface 的 Send 方法
 func (s *Aliyun) Send(phone string, message Message, config map[string]string) bool {
-	smsClient := aliyunsmsClient.New("http://dysmsapi.aliyuncs.com/")
+
+	smsClient := aliyunsmsclient.New("http://dysmsapi.aliyuncs.com/")
 
 	templateParam, err := json.Marshal(message.Data)
 	if err != nil {
@@ -31,10 +33,10 @@ func (s *Aliyun) Send(phone string, message Message, config map[string]string) b
 	)
 
 	logger.DebugJSON("短信[阿里云]", "请求内容", smsClient.Request)
-	logger.DebugJSON("短信[阿里云]", "请求响应", result)
+	logger.DebugJSON("短信[阿里云]", "接口响应", result)
 
 	if err != nil {
-		logger.ErrorString("短信[阿里云]", "发送失败", err.Error())
+		logger.ErrorString("短信[阿里云]", "发信失败", err.Error())
 		return false
 	}
 
@@ -45,10 +47,10 @@ func (s *Aliyun) Send(phone string, message Message, config map[string]string) b
 	}
 
 	if result.IsSuccessful() {
-		logger.DebugString("短信[阿里云]", "发送成功", "")
+		logger.DebugString("短信[阿里云]", "发信成功", "")
 		return true
 	} else {
-		logger.ErrorString("短信[阿里云]", "发送失败", string(resultJSON))
+		logger.ErrorString("短信[阿里云]", "服务商返回错误", string(resultJSON))
 		return false
 	}
 }
