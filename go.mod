@@ -33,6 +33,7 @@ require (
 	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/tinylib/msgp v1.1.6 // indirect
 	go.uber.org/zap v1.20.0
+	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.2.3
