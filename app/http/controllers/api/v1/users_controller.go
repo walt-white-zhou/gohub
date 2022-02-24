@@ -11,8 +11,8 @@ type UsersController struct {
 	BaseAPIController
 }
 
-// CurrentUser 当前登录用户消息
+// CurrentUser 当前登录用户信息
 func (ctrl *UsersController) CurrentUser(c *gin.Context) {
-	userModel := auth.CurrentUser
+	userModel := auth.CurrentUser(c)
 	response.Data(c, userModel)
 }
