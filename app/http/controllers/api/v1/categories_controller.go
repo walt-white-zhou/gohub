@@ -30,3 +30,16 @@ func (ctrl *CategoriesController) Store(c *gin.Context) {
 		response.Abort500(c, "创建失败，请稍后尝试~")
 	}
 }
+
+func (ctrl *BaseAPIController) Index(c *gin.Context) {
+	request := requests.PaginationRequest{}
+	if ok := requests.Validate(c, &request, requests.Pagination); !ok {
+		return
+	}
+
+	data, pager := category.Paginate(c, 10)
+	response.JSON(c, gin.H{
+		"data":  data,
+		"pager": pager,
+	})
+}
