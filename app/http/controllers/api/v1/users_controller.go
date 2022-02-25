@@ -4,6 +4,7 @@ import (
 	"gohub/pkg/auth"
 	"gohub/pkg/response"
 
+	"gohub/app/models/category"
 	"gohub/app/models/user"
 	"gohub/app/requests"
 
@@ -32,4 +33,30 @@ func (ctrl *UsersController) Index(c *gin.Context) {
 		"data":  data,
 		"pager": pager,
 	})
+}
+
+func (crl *CategoriesController) Update(c *gin.Context) {
+	// 验证 url 参数 id 是否正确
+	categoryModel := category.Get(c.Param("id"))
+	if categoryModel.ID == 0 {
+		response.Abort404(c)
+		return
+	}
+
+	// 表单验证
+	request := requests.CategoryRequest{}
+	if ok := requests.Validate(c, &request, requests.CategorySave); !ok {
+		return
+	}
+
+	// 保存数据
+	categoryModel.Name = request.Name
+	categoryModel.Description = request.Description
+	rowsAffected := categoryModel.Save()
+
+	if rowsAffected > 0 {
+		response.Data(c, categoryModel)
+	} else {
+		response.Abort500(c)
+	}
 }
