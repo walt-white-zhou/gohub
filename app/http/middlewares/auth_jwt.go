@@ -3,11 +3,12 @@ package middlewares
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"gohub/app/models/user"
 	"gohub/pkg/config"
 	"gohub/pkg/jwt"
 	"gohub/pkg/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 func AuthJWT() gin.HandlerFunc {
@@ -21,7 +22,6 @@ func AuthJWT() gin.HandlerFunc {
 			response.Unauthorized(c, fmt.Sprintf("请查看 %v 相关的接口认证文档", config.GetString("app.name")))
 			return
 		}
-
 		// jwt 解析成功， 设置用户信息
 		userModel := user.Get(claims.UserID)
 		if userModel.ID == 0 {
@@ -33,7 +33,6 @@ func AuthJWT() gin.HandlerFunc {
 		c.Set("current_user_id", userModel.GetStringID)
 		c.Set("current_user_name", userModel.Name)
 		c.Set("current_user", userModel)
-
 		c.Next()
 	}
 

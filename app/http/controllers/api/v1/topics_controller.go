@@ -14,17 +14,15 @@ type TopicsController struct {
 }
 
 func (ctrl *TopicsController) Store(c *gin.Context) {
-
 	request := requests.TopicRequest{}
 	if ok := requests.Validate(c, &request, requests.TopicSave); !ok {
 		return
 	}
-
 	topicModel := topic.Topic{
 		Title:      request.Title,
 		Body:       request.Body,
 		CategoryID: request.CategoryID,
-		UserID:     auth.CurrentUID(c),
+		UserID:     auth.CurrentUserID(c),
 	}
 	topicModel.Create()
 	if topicModel.ID > 0 {

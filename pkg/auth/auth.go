@@ -1,10 +1,13 @@
+// Package auth 授权相关逻辑
 package auth
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"gohub/app/models/user"
+	"gohub/pkg/jwt"
 	"gohub/pkg/logger"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Attempt 尝试登录
@@ -31,7 +34,7 @@ func LoginByPhone(phone string) (user.User, error) {
 	return userModel, nil
 }
 
-// CurrentUser 从 gin.Context 中获取当前登录用户
+// CurrentUser 从 gin.context 中获取当前登录用户
 func CurrentUser(c *gin.Context) user.User {
 	userModel, ok := c.MustGet("current_user").(user.User)
 	if !ok {
@@ -45,4 +48,10 @@ func CurrentUser(c *gin.Context) user.User {
 // CurrentUID 从 gin.context 中获取当前登录用户 ID
 func CurrentUID(c *gin.Context) string {
 	return c.GetString("current_user_id")
+}
+
+func CurrentUserID(c *gin.Context) string {
+	claims, _ := jwt.NewJWT().ParserToken(c)
+
+	return claims.UserID
 }
