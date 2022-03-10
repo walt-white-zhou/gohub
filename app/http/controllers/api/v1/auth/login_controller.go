@@ -1,12 +1,13 @@
 package auth
 
 import (
-	"github.com/gin-gonic/gin"
 	v1 "gohub/app/http/controllers/api/v1"
 	"gohub/app/requests"
 	"gohub/pkg/auth"
 	"gohub/pkg/jwt"
 	"gohub/pkg/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 // LoginController 用户控制器

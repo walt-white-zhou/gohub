@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"gohub/app/cmd"
 	"gohub/app/cmd/make"
 	"gohub/bootstrap"
@@ -10,6 +9,8 @@ import (
 	"gohub/pkg/config"
 	"gohub/pkg/console"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
 func init() {
