@@ -5,16 +5,17 @@ import (
 	"gohub/pkg/database"
 )
 
-func (link *Link) Create() {
-	database.DB.Create(&link)
+func Get(idstr string) (link Link) {
+	database.DB.Where("id", idstr).First(&link)
+	return
 }
 
-func (link *Link) Save() (rowsAffected int64) {
-	result := database.DB.Save(&link)
-	return result.RowsAffected
+func GetBy(field, value string) (link Link) {
+	database.DB.Where("? = ?", field, value).First(&link)
+	return
 }
 
-func (link *Link) Delete() (rowsAffected int64) {
-	result := database.DB.Delete(&link)
-	return result.RowsAffected
+func All() (links []Link) {
+	database.DB.Find(&links)
+	return
 }
