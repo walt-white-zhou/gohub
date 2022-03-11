@@ -44,5 +44,5 @@ func runCacheClear(cmd *cobra.Command, args []string) {
 
 func runCacheForget(cmd *cobra.Command, args []string) {
 	cache.Forget(cacheKey)
-	console.Success(fmt.Sprintf("Cache key [%] deleted.", cacheKey))
+	console.Success(fmt.Sprintf("Cache key [%s] deleted.", cacheKey))
 }
