@@ -2,6 +2,8 @@ package v1
 
 import (
 	"gohub/pkg/auth"
+	"gohub/pkg/config"
+	"gohub/pkg/file"
 	"gohub/pkg/response"
 
 	"gohub/app/models/category"
@@ -154,4 +156,23 @@ func (ctrl *UsersController) UpdatePasswrd(c *gin.Context) {
 
 		response.Success(c)
 	}
+}
+
+func (ctrl *UsersController) UpdateAvatar(c *gin.Context) {
+
+	request := requests.UserUpdateAvatarRequest{}
+	if ok := requests.Validate(c, &request, requests.UserUpdateAvatar); !ok {
+		return
+	}
+	avatar, err := file.SaveUploadAvatar(c, request.Avatar)
+	if err != nil {
+		response.Abort500(c, "上传头像失败，请稍后尝试~")
+		return
+	}
+
+	currentUser := auth.CurrentUser(c)
+	currentUser.Avatar = config.GetString("app.url") + avatar
+	currentUser.Save()
+
+	response.Data(c, currentUser)
 }
